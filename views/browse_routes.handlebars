@@ -1,3 +1,4 @@
+<h1><a href='/'>Home</a></h1>
 {{#if this.area_chosen}}
 	{{#each areas}}
 		<h3>Routes for {{this.name}}</h3>
@@ -16,7 +17,8 @@
 		<th>Type</th>
 		<th>Grade</th>
 		<th>Pitches</th>
-		<th>Rating</th>
+		<th>Average Rating</th>
+		<th>Number of Ratings</th>
 	<tr>
 
 {{#each results}}
@@ -30,6 +32,7 @@
 		<td>{{this.grade}}</td>
 		<td>{{this.pitch_count}}</td>
 		<td>{{this.rating}}</td>
+		<td>{{this.rating_count}}</td>
 	</tr>
 {{/each}}
 </table>
@@ -37,13 +40,23 @@
 <form>
 	<fieldset>
 	<legend>Add New Route</legend>
-		<input type="text" id = "area" name="area" placeholder="Area Name" required>
-		<input type="text" id = "approach" name = "approach" placeholder = "Approach" required>
-		State: <select type = "state" name = "state" required>
-			{{#each states}}
-				<option value="{{this.state_id}}">{{this.state}}</option>
+		<input type="text" id = "title" name="title" placeholder="Route Title" required><br>
+		<select type = "area" name = "area" placeholder = "Area" required>
+			{{#each areas}}
+				<option value="{{this.area_id}}">{{this.name}}</option>
 			{{/each}}
-		</select>
-		<button onclick="addArea()">Add Area to Database</button>
+		</select><br>
+		<input type="text" id = "overview" name="overview" placeholder="Route Overview" required><br>
+		<input type="text" id = "grade" name="grade" placeholder="Route Grade" required><br>
+		<input type="text" id = "type" name="type" placeholder="Route Type"><br>
+		<input type="text" id = "approach" name="approach" placeholder="Route Approach" required><br>
+		<input type="number" id = "lat" name = "lat" placeholder = "Latitude"><br>
+		<input type="number" id = "long" name = "long" placeholder = "Longitude"><br>
+		<input type="text" id = "fa" name = "fa" placeholder = "First Ascent"><br>
+		<input type="date" id = "fa_date" name = "fa_date" placeholder = "First Ascent Date"><br>
+		<input type="number" iod = "pitch" name="pitch" min = "1" placeholder = "Pitches" required><br>
+		<button onclick="addRoute()">Add Route to Database</button><br>
 	</fieldset>
 </form>
+
+<script src="/js/scripts.js"></script>

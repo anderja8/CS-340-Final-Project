@@ -27,6 +27,8 @@ app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', 8513);
 
+app.use(express.static('public'));
+
 //At some point, I will add login functionality here
 
 //Render the home page
@@ -37,7 +39,7 @@ app.get('/', function(req, res, next) {
 
 //Render the browse states page
 app.get('/browse_states', function(req, res, next) {
-	mysql.pool.query("select state, state_id from States order by state desc",function(err, rows, fields){
+	mysql.pool.query("select state, state_id from States order by state asc",function(err, rows, fields){
 		if (err) {
 			console.log("Error querying States.")
 		}
@@ -63,14 +65,14 @@ app.get('/browse_areas', function(req, res, next) {
 		stQry += "where state_id = ? ";
 	}
 
-	arQry += "order by state desc, name desc ";
-	stQry += "order by state desc ";
+	arQry += "order by state asc, name asc ";
+	stQry += "order by state asc ";
 
 	//Query for areas
 	mysql.pool.query(arQry, req.query.state_id, function(err, rows, fields){
 		if (err) {
 			console.log("Error querying Areas.");
-			console.log("Qry was: " + qry);
+			console.log("Qry was: " + arQry);
 			console.log("state_id was: " + req.query.state_id);
 		}
 		
@@ -97,6 +99,71 @@ app.get('/browse_areas', function(req, res, next) {
 		});
 	});
 });
+
+//Render the browse routes page (Extremely similar to the browse areas page)
+app.get('/browse_routes', function(req, res, next) {
+
+	//Setting up the queries to render the page data
+	rtQry = "select rt.route_title, rt.route_id, rt.area_id, rt.overview, rt.grade, rt.type, rt.approach, ";
+	rtQry += "rt.latitude, rt.longitude, rt.first_ascent, rt.first_ascent_date, rt.pitch_count, ar.name, ";
+	rtQry += "st.state, ur.rating, ur.rating_count ";
+	rtQry += "from Routes rt ";
+	rtQry += "left join Areas ar on ar.area_id = rt.area_id ";
+	rtQry += "left join States st on st.state_id = ar.state_id ";
+	rtQry += "left join ( ";
+	rtQry += "	select ";
+	rtQry += "	route_id, ";
+	rtQry += "	round(avg(rating),1) as rating, ";
+	rtQry += "	count(rating) as rating_count ";
+	rtQry += "	from Users_Routes ";
+	rtQry += "	group by route_id ";
+	rtQry += "	) ur on ur.route_id = rt.route_id ";
+
+	arQry = "select name, area_id from Areas "
+	
+
+	//If the user reached this page from the area browsing page, filter by selected area
+	if (req.query.area_id != undefined) {
+		rtQry += "where rt.area_id = ? ";
+		arQry += "where area_id = ? ";
+	}
+
+	rtQry += "order by ar.name asc, rt.route_title asc ";
+	arQry += "order by name asc ";
+
+	//Query for routes
+	mysql.pool.query(rtQry, req.query.area_id, function(err, rows, fields){
+		if (err) {
+			console.log("Error querying Routes.");
+			console.log("Qry was: " + rtQry);
+			console.log("route_id was: " + req.query.area_id);
+		}
+		
+		context = [];
+		context.results = rows;
+		
+		//Query for which states to include in select list for area addition form
+		mysql.pool.query(arQry, req.query.area_id, function(err, rows, fields){
+			if (err) {
+				console.lod("Error querying Areas")
+				console.log("Qry was: " + arQry);
+				console.log("state_id was: " + req.query.area_id);
+
+			}
+			context.areas = rows;
+
+			//If we're filtering by a area_id, pass that to context so we can tell the user
+			if (req.query.state_id != undefined) {
+				context.area_chosen = 1;
+			}
+			
+			//Render the page
+			res.render('browse_routes', context);
+		});
+	});
+});
+
+
 
 //Render the login page
 app.get('/login', function(req, res, next) {
