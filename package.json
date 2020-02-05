@@ -1,0 +1,16 @@
+{
+	"name": "Climbing Route Repository",
+	"version": "1.0.0",
+	"description": "A small web-app for rock climbing route information",
+	"main": "index.js",
+	"author": "Jacob Anderson, John Rudolph",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^4.17.1",
+		"express-handlebars": "^4.7.3",
+		"express-session": "^1.17.0",
+		"forever": "^2.0.0",
+		"mysql": "^2.18.1",
+		"passport": "^0.4.1"
+	}
+}
