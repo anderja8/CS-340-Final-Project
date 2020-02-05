@@ -1,0 +1,49 @@
+{{#if this.area_chosen}}
+	{{#each areas}}
+		<h3>Routes for {{this.name}}</h3>
+	{{/each}}
+{{else}}
+	<h3>Routes for all Areas</h3>
+{{/if}}
+
+<table id= "routeTable">
+	<tr>
+		<th>Route Name</th>
+		<th>Area Name</th>
+		<th>State Name</th>
+		<th>Latitude</th>
+		<th>Longitude</th>
+		<th>Type</th>
+		<th>Grade</th>
+		<th>Pitches</th>
+		<th>Rating</th>
+	<tr>
+
+{{#each results}}
+	<tr>
+		<td><a href="route_details/?route_id={{this.route_id}}">{{this.route_title}}</a></td>
+		<td>{{this.name}}</td>
+		<td>{{this.state}}</td>
+		<td>{{this.latitude}}</td>
+		<td>{{this.longitude}}</td>
+		<td>{{this.type}}</td>
+		<td>{{this.grade}}</td>
+		<td>{{this.pitch_count}}</td>
+		<td>{{this.rating}}</td>
+	</tr>
+{{/each}}
+</table>
+
+<form>
+	<fieldset>
+	<legend>Add New Route</legend>
+		<input type="text" id = "area" name="area" placeholder="Area Name" required>
+		<input type="text" id = "approach" name = "approach" placeholder = "Approach" required>
+		State: <select type = "state" name = "state" required>
+			{{#each states}}
+				<option value="{{this.state_id}}">{{this.state}}</option>
+			{{/each}}
+		</select>
+		<button onclick="addArea()">Add Area to Database</button>
+	</fieldset>
+</form>
