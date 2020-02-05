@@ -35,6 +35,27 @@ app.get('/', function(req, res, next) {
 	res.render('home', context);
 });
 
+//Render the browse states page
+app.get('/browse_states', function(req, res, next) {
+	mysql.pool.query("select state, state_id from States",function(err, rows, fields){
+		
+		if(err) {
+			console.log(err);
+		}
+
+		context = [];
+		context.results = rows;
+		console.log(rows);
+		res.render('browse_states', context);
+	});
+});
+
+//Render the login page
+app.get('/login', function(req, res, next) {
+	let context = {};
+	res.render('login', context);
+});
+
 app.use(function(req, res) {
 	let context = {};
 	context.layout = 'blank';
