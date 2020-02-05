@@ -1,3 +1,5 @@
+<h3>States currently in the Database</h3>
+
 <table id= "stateTable">
 	<tr>
 		<th>State Name</th>
@@ -5,7 +7,15 @@
 
 {{#each results}}
 	<tr>
-		<td><a href='browse_areas/?state_id={{this.state_id}}>{{this.state}}</a></td>
+		<td><a href="browse_areas/?state_id={{this.state_id}}">{{this.state}}</a></td>
 	</tr>
 {{/each}}
 </table>
+
+<form>
+	<fieldset>
+	<legend>Add New State</legend>
+		<input type="text" id = "state" name="state" placeholder="State Name">
+		<button onclick="addState()">Add State to Database</button>
+	</fieldset>
+</form>

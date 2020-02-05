@@ -37,16 +37,64 @@ app.get('/', function(req, res, next) {
 
 //Render the browse states page
 app.get('/browse_states', function(req, res, next) {
-	mysql.pool.query("select state, state_id from States",function(err, rows, fields){
-		
-		if(err) {
-			console.log(err);
+	mysql.pool.query("select state, state_id from States order by state desc",function(err, rows, fields){
+		if (err) {
+			console.log("Error querying States.")
 		}
 
 		context = [];
 		context.results = rows;
-		console.log(rows);
 		res.render('browse_states', context);
+	});
+});
+
+//Render the browse areas page
+app.get('/browse_areas', function(req, res, next) {
+
+	//Setting up the queries to render the page data
+	arQry = "select ar.area_id, ar.state_id, ar.name, ar.approach, st.state ";
+	arQry += "from Areas ar left join States st on ar.state_id = st.state_id ";
+	stQry = "select state, state_id from States "
+	
+
+	//If the user reached this page from the state browsing page, filter by selected state
+	if (req.query.state_id != undefined) {
+		arQry += "where ar.state_id = ? ";
+		stQry += "where state_id = ? ";
+	}
+
+	arQry += "order by state desc, name desc ";
+	stQry += "order by state desc ";
+
+	//Query for areas
+	mysql.pool.query(arQry, req.query.state_id, function(err, rows, fields){
+		if (err) {
+			console.log("Error querying Areas.");
+			console.log("Qry was: " + qry);
+			console.log("state_id was: " + req.query.state_id);
+		}
+		
+		context = [];
+		context.results = rows;
+		
+		//Query for which states to include in select list for area addition form
+		mysql.pool.query(stQry, req.query.state_id, function(err, rows, fields){
+			if (err) {
+				console.lod("Error querying states")
+				console.log("Qry was: " + stQry);
+				console.log("state_id was: " + req.query.state_id);
+
+			}
+			context.states = rows;
+
+			//If we're filtering by a state_id, pass that to context so we can tell the user
+			if (req.query.state_id != undefined) {
+				context.state_chosen = 1;
+			}
+			
+			//Render the page
+			res.render('browse_areas', context);
+		});
 	});
 });
 

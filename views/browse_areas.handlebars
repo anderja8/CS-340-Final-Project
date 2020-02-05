@@ -1,0 +1,37 @@
+{{#if this.state_chosen}}
+	{{#each states}}
+		<h3>Areas for {{this.state}}</h3>
+	{{/each}}
+{{else}}
+	<h3>Areas for all States</h3>
+{{/if}}
+
+<table id= "areaTable">
+	<tr>
+		<th>Area Name</th>
+		<th>Area State</th>
+		<th>Area Approach</th>
+	<tr>
+
+{{#each results}}
+	<tr>
+		<td><a href="browse_routes/?area_id={{this.area_id}}">{{this.name}}</a></td>
+		<td>{{this.state}}</td>
+		<td>{{this.approach}}</td>
+	</tr>
+{{/each}}
+</table>
+
+<form>
+	<fieldset>
+	<legend>Add New Area</legend>
+		<input type="text" id = "area" name="area" placeholder="Area Name">
+		<input type="text" id = "approach" name = "approach" placeholder = "Approach">
+		State: <select type = "state" name = "state">
+			{{#each states}}
+				<option value="{{this.state_id}}">{{this.state}}</option>
+			{{/each}}
+		</select>
+		<button onclick="addArea()">Add Area to Database</button>
+	</fieldset>
+</form>
