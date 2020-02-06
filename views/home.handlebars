@@ -1,6 +1,11 @@
 
 <h1>Welcome to the free Rock Route Repository!</h1>
-<p>Log In or Sign Up <a href="/login">Here</a></p>
+
+{{#if this.user}}
+	<p>Logged in as: {{this.user}}</p>	
+{{else}}
+	<p>Log In or Sign Up <a href="/login">Here</a></p>
+{{/if}}
 
 <ul>
 	<li>Manage user account</li>

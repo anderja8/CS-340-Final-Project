@@ -29,11 +29,23 @@ app.set('port', 8513);
 
 app.use(express.static('public'));
 
-//At some point, I will add login functionality here
+//Adding login functionality
+//Pulled this version of login functionality verbatim from Jacob's
+//previous CS361 project
+app.use(session({
+	secret: 'routeSecret',
+	resave: false,
+	saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 //Render the home page
 app.get('/', function(req, res, next) {
 	let context = {};
+	if (req.session.userid) {
+		context.user = req.session.name;
+	}
 	res.render('home', context);
 });
 
@@ -145,7 +157,7 @@ app.get('/browse_routes', function(req, res, next) {
 		//Query for which states to include in select list for area addition form
 		mysql.pool.query(arQry, req.query.area_id, function(err, rows, fields){
 			if (err) {
-				console.lod("Error querying Areas")
+				console.log("Error querying Areas")
 				console.log("Qry was: " + arQry);
 				console.log("state_id was: " + req.query.area_id);
 
@@ -165,10 +177,42 @@ app.get('/browse_routes', function(req, res, next) {
 
 
 
-//Render the login page
+//Render the login page, redirect if sign up or login submit buttons pressed
 app.get('/login', function(req, res, next) {
+
+	//If the user is trying to login, verify credentials, set session userid, and redirect to the home page
+	if (req.query.buttonFunc == "Login") {
+		qry = "select user_id, username, password, first_name, last_name from Users where username=? and password=?";
+		mysql.pool.query(qry, [req.query.username, req.query.password], function(err, rows, fields) {
+			//If the results length is 1, we found the user, set session values
+			if (rows.length > 0) {
+				req.session.userid = rows[0].user_id;
+				req.session.name = rows[0].first_name + " " + rows[0].last_name;
+				res.redirect('/');
+			}
+			//Otherwise, just refresh the page
+			else {
+				res.redirect('/login');
+			}
+		});
+	}
+	else {
+		qry = "select state, state_id from States order by state asc";
+		mysql.pool.query(qry, function(err, rows, fields) {
+			if (err) {
+				console.log("Error querying from States.");
+			}
+			
+			context = [];
+			context.results = rows;
+			res.render('login', context);
+		});
+	}
+});
+
+//Check login credentials
+app.get('/login/:username/:password', function(req, res, next) {
 	let context = {};
-	res.render('login', context);
 });
 
 app.use(function(req, res) {
@@ -188,4 +232,12 @@ app.use(function(req, res) {
 
 app.listen(app.get('port'), function() {
 	console.log('Web server has begun running on port ' + app.get('port') + '. Press Ctrl+C to quit.');
+});
+
+passport.serializeUser(function(user_id, done) {
+	done(null, user_id);
+});
+
+passport.deserializeUser(function(user_id, done) {
+	done(err, user);
 });
