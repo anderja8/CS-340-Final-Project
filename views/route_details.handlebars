@@ -1,0 +1,41 @@
+<h1>Route Details</h1>
+
+<table id= "routeTable">
+	<tr>
+		<th>Route Name</th>
+		<th>Area Name</th>
+		<th>State Name</th>
+		<th>Latitude</th>
+		<th>Longitude</th>
+		<th>Type</th>
+		<th>Grade</th>
+		<th>Pitches</th>
+        <th>Approach</th>
+        <th>Overview</th>
+        <th>Average Rating</th>
+		<th>Number of Ratings</th>
+	<tr>
+
+{{#each results}}
+	<tr>
+		<td>{{this.route_title}}</td>
+		<td>{{this.name}}</td>
+		<td>{{this.state}}</td>
+		<td>{{this.latitude}}</td>
+		<td>{{this.longitude}}</td>
+		<td>{{this.type}}</td>
+		<td>{{this.grade}}</td>
+		<td>{{this.pitch_count}}</td>
+        <td>{{this.approach}}</td>
+        <td>{{this.overview}}</td>
+		<td>{{this.rating}}</td>
+		<td>{{this.rating_count}}</td>
+	</tr>
+{{/each}}
+</table>
+<br>
+<br>
+
+<div class="rating">
+<span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
+</div>
