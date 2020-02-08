@@ -51,7 +51,12 @@ app.get('/', function(req, res, next) {
 
 //Render the browse states page
 app.get('/browse_states', function(req, res, next) {
-	mysql.pool.query("select state, state_id from States order by state asc",function(err, rows, fields){
+	stQry = "select st.state, st.state_id, NVL(ar.area_count, 0) as area_count from States st ";
+	stQry += "left join ( ";
+	stQry += "	select count(area_id) area_count, state_id from Areas group by state_id ";
+	stQry += ") ar on ar.state_id = st.state_id ";
+	stQry += "order by st.state asc";
+	mysql.pool.query(stQry,function(err, rows, fields){
 		if (err) {
 			console.log("Error querying States.")
 		}
@@ -66,8 +71,12 @@ app.get('/browse_states', function(req, res, next) {
 app.get('/browse_areas', function(req, res, next) {
 
 	//Setting up the queries to render the page data
-	arQry = "select ar.area_id, ar.state_id, ar.name, ar.approach, st.state ";
+	arQry = "select ar.area_id, ar.state_id, ar.name, ar.approach, st.state, ";
+	arQry += "NVL(rt.route_count, 0) as route_count ";
 	arQry += "from Areas ar left join States st on ar.state_id = st.state_id ";
+	arQry += "left join ( ";
+	arQry += "	select count(route_id) as route_count, area_id from Routes group by area_id ";
+	arQry += ") rt on rt.area_id = ar.area_id ";
 	stQry = "select state, state_id from States "
 	
 
@@ -77,7 +86,7 @@ app.get('/browse_areas', function(req, res, next) {
 		stQry += "where state_id = ? ";
 	}
 
-	arQry += "order by state asc, name asc ";
+	arQry += "order by st.state asc, ar.name asc ";
 	stQry += "order by state asc ";
 
 	//Query for areas
@@ -118,7 +127,7 @@ app.get('/browse_routes', function(req, res, next) {
 	//Setting up the queries to render the page data
 	rtQry = "select rt.route_title, rt.route_id, rt.area_id, rt.overview, rt.grade, rt.type, rt.approach, ";
 	rtQry += "rt.latitude, rt.longitude, rt.first_ascent, rt.first_ascent_date, rt.pitch_count, ar.name, ";
-	rtQry += "st.state, ur.rating, ur.rating_count ";
+	rtQry += "st.state, ur.rating, NVL(ur.rating_count, 0) as rating_count ";
 	rtQry += "from Routes rt ";
 	rtQry += "left join Areas ar on ar.area_id = rt.area_id ";
 	rtQry += "left join States st on st.state_id = ar.state_id ";
@@ -165,7 +174,7 @@ app.get('/browse_routes', function(req, res, next) {
 			context.areas = rows;
 
 			//If we're filtering by a area_id, pass that to context so we can tell the user
-			if (req.query.state_id != undefined) {
+			if (req.query.area_id != undefined) {
 				context.area_chosen = 1;
 			}
 			

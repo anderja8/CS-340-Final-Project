@@ -4,11 +4,13 @@
 <table id= "stateTable">
 	<tr>
 		<th>State Name</th>
+		<th>Areas in State</th>
 	<tr>
 
 {{#each results}}
 	<tr>
 		<td><a href="/browse_areas/?state_id={{this.state_id}}">{{this.state}}</a></td>
+		<td>{{this.area_count}}</td>
 	</tr>
 {{/each}}
 </table>

@@ -12,6 +12,7 @@
 		<th>Area Name</th>
 		<th>Area State</th>
 		<th>Area Approach</th>
+		<th>Routes in Area</th>
 	<tr>
 
 {{#each results}}
@@ -19,6 +20,7 @@
 		<td><a href="/browse_routes/?area_id={{this.area_id}}">{{this.name}}</a></td>
 		<td>{{this.state}}</td>
 		<td>{{this.approach}}</td>
+		<td>{{this.route_count}}</td>
 	</tr>
 {{/each}}
 </table>
