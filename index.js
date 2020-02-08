@@ -231,6 +231,36 @@ app.get('/profile', function(req, res, next){
 	//need query results for user info
 });
 
+app.get('/route_details', function(req, res, next){
+
+	//Setting up the queries to render the page data
+	rtQry = "select rt.route_title, rt.route_id, rt.area_id, rt.overview, rt.grade, rt.type, rt.approach, ";
+	rtQry += "rt.latitude, rt.longitude, rt.first_ascent, rt.first_ascent_date, rt.pitch_count, ar.name, ";
+	rtQry += "st.state, ur.rating, ur.rating_count ";
+	rtQry += "from Routes rt ";
+	rtQry += "left join Areas ar on ar.area_id = rt.area_id ";
+	rtQry += "left join States st on st.state_id = ar.state_id ";
+	rtQry += "left join ( ";
+	rtQry += "	select ";
+	rtQry += "	route_id, ";
+	rtQry += "	round(avg(rating),1) as rating, ";
+	rtQry += "	count(rating) as rating_count ";
+	rtQry += "	from Users_Routes ";
+	rtQry += "	group by route_id ";
+	rtQry += "	) ur on ur.route_id = rt.route_id ";
+
+	mysql.pool.query(rtQry, req.query.route_id, function(err, rows, fields){
+		if (err) {
+			console.log("Error querying Routes.");
+			console.log("Qry was: " + rtQry);
+			console.log("route_id was: " + req.query.route_id);
+		}
+		
+		context = [];
+		context.results = rows;
+		res.render('route_details', context)
+	});
+});
 
 
 app.use(function(req, res) {
