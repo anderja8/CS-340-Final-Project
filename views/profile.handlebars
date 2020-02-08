@@ -1,0 +1,22 @@
+<h1><a href='/'>Home</a></h1>
+
+<h3>Welcome **Username from DB**{{this.username}}</h3>
+
+<table id= "userTable">
+	<tr>
+		<th>**USER INFO FROM DB**{{this.username}}</th>
+	<tr>
+
+{{#each results}}
+	<tr>
+		<td><a href="/profile/?user_id={{this.user_id}}">{{this.username}}</a></td>
+	</tr>
+{{/each}}
+</table>
+
+<button onclick="updateProfile()">Update Your Account Information</button>
+<br>
+<br>
+<button onclick="deleteProfile()">Delete Your Account</button>
+
+<script src="/js/scripts.js"></script>
