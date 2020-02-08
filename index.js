@@ -94,7 +94,7 @@ app.get('/browse_areas', function(req, res, next) {
 		//Query for which states to include in select list for area addition form
 		mysql.pool.query(stQry, req.query.state_id, function(err, rows, fields){
 			if (err) {
-				console.lod("Error querying states")
+				console.log("Error querying states")
 				console.log("Qry was: " + stQry);
 				console.log("state_id was: " + req.query.state_id);
 
@@ -214,6 +214,15 @@ app.get('/login', function(req, res, next) {
 app.get('/login/:username/:password', function(req, res, next) {
 	let context = {};
 });
+
+
+//Render User profile page
+app.get('/profile', function(req, res, next){
+	res.render('profile')
+	//need query results for user info
+});
+
+
 
 app.use(function(req, res) {
 	let context = {};
