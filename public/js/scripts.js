@@ -25,3 +25,7 @@ function updateRating() {
 function deleteRating() {
 	console.log("Function deleteRating() was called.")
 }
+
+function addRating() {
+	console.log("Function addRating() was called.")
+}
