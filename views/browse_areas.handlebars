@@ -1,4 +1,19 @@
 <h1><a href='/'>Home</a></h1>
+
+<form>
+	<fieldset>
+	<legend>Add New Area</legend>
+		<input type="text" id = "area" name="area" placeholder="Area Name" required>
+		<input type="text" id = "approach" name = "approach" placeholder = "Approach" required>
+		State: <select type = "state" name = "state" required>
+			{{#each states}}
+				<option value="{{this.state_id}}">{{this.state}}</option>
+			{{/each}}
+		</select>
+		<button onclick="addArea()">Add Area to Database</button>
+	</fieldset>
+</form>
+
 {{#if this.state_chosen}}
 	{{#each states}}
 		<h3>Areas for {{this.state}}</h3>
@@ -25,18 +40,6 @@
 {{/each}}
 </table>
 
-<form>
-	<fieldset>
-	<legend>Add New Area</legend>
-		<input type="text" id = "area" name="area" placeholder="Area Name" required>
-		<input type="text" id = "approach" name = "approach" placeholder = "Approach" required>
-		State: <select type = "state" name = "state" required>
-			{{#each states}}
-				<option value="{{this.state_id}}">{{this.state}}</option>
-			{{/each}}
-		</select>
-		<button onclick="addArea()">Add Area to Database</button>
-	</fieldset>
-</form>
+
 
 <script src="/js/scripts.js"></script>

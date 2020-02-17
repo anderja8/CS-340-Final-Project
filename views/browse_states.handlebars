@@ -1,4 +1,14 @@
 <h1><a href='/'>Home</a></h1>
+
+<form>
+	<fieldset>
+	<legend>Add New State</legend>
+		<input type="text" id = "state" name="state" placeholder="State Name" required>
+		<button onclick="addState()">Add State to Database</button>
+	</fieldset>
+</form>
+
+
 <h3>States currently in the Database</h3>
 
 <table id= "stateTable">
@@ -15,12 +25,6 @@
 {{/each}}
 </table>
 
-<form>
-	<fieldset>
-	<legend>Add New State</legend>
-		<input type="text" id = "state" name="state" placeholder="State Name" required>
-		<button onclick="addState()">Add State to Database</button>
-	</fieldset>
-</form>
+
 
 <script src="/js/scripts.js"></script>
