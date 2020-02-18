@@ -1,5 +1,13 @@
 <h1><a href='/'>Home</a></h1>
 
+{{#if this.state_chosen}}
+	{{#each states}}
+		<h3>Areas for {{this.state}}</h3>
+	{{/each}}
+{{else}}
+	<h3>Areas for all States</h3>
+{{/if}}
+
 <form>
 	<fieldset>
 	<legend>Add New Area</legend>
@@ -13,14 +21,6 @@
 		<button onclick="addArea()">Add Area to Database</button>
 	</fieldset>
 </form>
-
-{{#if this.state_chosen}}
-	{{#each states}}
-		<h3>Areas for {{this.state}}</h3>
-	{{/each}}
-{{else}}
-	<h3>Areas for all States</h3>
-{{/if}}
 
 <table id= "areaTable">
 	<tr>

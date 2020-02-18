@@ -1,5 +1,13 @@
 <h1><a href='/'>Home</a></h1>
 
+{{#if this.area_chosen}}
+	{{#each areas}}
+		<h3>Routes for {{this.name}}</h3>
+	{{/each}}
+{{else}}
+	<h3>Routes for all Areas</h3>
+{{/if}}
+
 <form>
 	<fieldset>
 	<legend>Add New Route</legend>
@@ -21,14 +29,6 @@
 		<button onclick="addRoute()">Add Route to Database</button><br>
 	</fieldset>
 </form>
-
-{{#if this.area_chosen}}
-	{{#each areas}}
-		<h3>Routes for {{this.name}}</h3>
-	{{/each}}
-{{else}}
-	<h3>Routes for all Areas</h3>
-{{/if}}
 
 <table id= "routeTable">
 	<tr>
