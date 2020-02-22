@@ -1,7 +1,7 @@
 -- Course: CS340
 -- Date: 02/21/2020
 -- Team: Team 7, Fighting Flamingos
--- Name: Jacob Anderson, John Rudoloph
+-- Name: Jacob Anderson, John Rudolph
 
 -- phpMyAdmin SQL Dump
 -- version 4.9.2
