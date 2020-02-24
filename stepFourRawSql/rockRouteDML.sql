@@ -84,3 +84,74 @@ insert into Routes
 (route_title, area_id, overview, grade, type, approach, latitude, longitude, first_ascent, first_ascent_date, pitch_count)
 values (:inputTitle, :inputAreaId, :inputOverview, :inputGrade, :inputType, :inputApproach, :inputLatitude,
 :inputLongitude, :inputFirstAscent, :inputFirstAscentDate, :inputPitchCount);
+
+
+/******************************************
+Queries for Route Details Page
+*******************************************/
+-- Directed to page when click link of Route Name in Area Browse page
+select rt.route_title, rt.route_id, rt.area_id, rt.overview, rt.grade, rt.type, rt.approach,
+	rt.latitude, rt.longitude, rt.first_ascent, rt.first_ascent_date, rt.pitch_count, ar.name, 
+	st.state, ur.rating, ur.rating_count
+	from Routes rt
+	left join Areas ar on ar.area_id = rt.area_id
+	left join States st on st.state_id = ar.state_id
+		left join (
+			select
+			route_id,
+			round(avg(rating),1) as rating,
+			count(rating) as rating_count
+				from Users_Routes
+				group by route_id
+		) ur on ur.route_id = rt.route_id;
+
+
+/******************************************
+Queries for Login Page
+*******************************************/
+-- login query for existing user
+select user_id, username, password, first_name, last_name 
+from Users 
+where username= :? and password= :?;
+
+-- New user sign up
+insert into Users
+(first_name, last_name, username, password, state_id)
+values (:firstName, :lastName, :userName, :password, :stateId);
+
+
+/******************************************
+Queries for profile Page
+*******************************************/
+-- Display name at top of page
+select fist_name, last_name 
+from Users 
+where user_id = :loggedInUser;
+
+--Display Route Rating ***NOT WORKING RIGHT***
+select Routes.route_title
+from Routes
+join (
+	select rating
+	from Users_Routes
+) Users_Routes on Users_Routes.route_id = Routes.route_id;
+
+
+
+--Update User info
+update Users
+set first_name = :newFirstName, last_name = :newLastName, state_id = :newStateId
+where user_id = :loggedInUser;
+
+--Delete User
+delete from Users
+where user_id = :loggedInUser;
+
+--Update Route Rating
+update Users_Routes 
+set rating = :newRating
+where user_id = :loggedInUser;
+
+--Delete Route Rating
+delete from Users_Routes
+where user_id = :loggedInUser;
