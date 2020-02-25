@@ -128,14 +128,11 @@ select fist_name, last_name
 from Users 
 where user_id = :loggedInUser;
 
---Display Route Rating ***NOT WORKING RIGHT***
-select Routes.route_title
-from Routes
-join (
-	select rating
-	from Users_Routes
-) Users_Routes on Users_Routes.route_id = Routes.route_id;
-
+--Display Route Rating
+select Users_Routes.rating, Routes.route_title
+from Users_Routes 
+left join Routes on Routes.route_id = Users_Routes.route_id
+where Users_Routes.user_id = :loggedInUser;
 
 
 --Update User info
