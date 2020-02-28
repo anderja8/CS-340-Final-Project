@@ -306,3 +306,13 @@ passport.serializeUser(function(user_id, done) {
 passport.deserializeUser(function(user_id, done) {
 	done(err, user);
 });
+
+//Helper function to convert empty strings to NULL
+//Copied verbatim from Jacob's old CS361 project
+function nullify(array) {
+    for (key in array) {
+        if (array[key] == "") {
+            array[key] = null;
+        }
+    }
+};
