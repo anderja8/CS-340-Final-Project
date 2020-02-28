@@ -67,6 +67,22 @@ app.get('/browse_states', function(req, res, next) {
 	});
 });
 
+//Handle adding a state to the database
+app.post('/add_state', function(req, res, next) {
+	mysql.pool.query("insert into States (state) values (?)", req.body.state, function(err, result){
+		if (err) {
+			console.log("Error adding state to db. State name was: " + req.body.state);
+			var payload = {resValue: 0}
+			res.send(JSON.stringify(payload));
+		}
+		else {
+			console.log("State created");
+			var payload = {resValue: 1}
+			res.send(JSON.stringify(payload));
+		}
+	});
+});
+
 //Render the browse areas page
 app.get('/browse_areas', function(req, res, next) {
 
