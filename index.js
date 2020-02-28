@@ -184,7 +184,24 @@ app.get('/browse_routes', function(req, res, next) {
 	});
 });
 
+//Post handler for creating new account
+app.post('/login/post', function(req, res, next){
+	if (req.query.buttonFunc == "SignUp") {
+		qry = "insert into Users"
+		qry += "(first_name, last_name, username, password, state_id)"
+		qry += "values (?);"
 
+		var context = {};
+  		mysql.pool.query(qry, [req.query.c], function(err, result){
+			if(err){
+			next(err);
+			return;
+			}
+			context.results = "first_name" + result.insertId;
+			res.render('/',context);
+		});
+	}
+});
 
 //Render the login page, redirect if sign up or login submit buttons pressed
 app.get('/login', function(req, res, next) {

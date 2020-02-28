@@ -4,13 +4,13 @@
 <fieldset>
     <form>
         First Name: <br>
-        <input type="text" name="first_name"><br>
+        <input type="text" id="logInFirstName" name="first_name"><br>
         Last Name: <br>
-        <input type="text" name="last_name"><br>
+        <input type="text" id="logInLastName" name="last_name"><br>
         User Name: <br>
-        <input type="text" name="username"><br>
+        <input type="text" id="logInUserName" name="username"><br>
         Password:<br>
-        <input type="password" name="password"><br>
+        <input type="password" id="logInPassword" name="password"><br>
         Where do you climb? (Optional)<br>
     <select name="state" id="state">
         <option value="" selected="selected">Select a State</option>
@@ -19,7 +19,7 @@
 	{{/each}}
     </select> <br>
 
-    <input type="submit" name="buttonFunc" value="SignUp">
+    <input type="submit" id="signUpButton" name="buttonFunc" value="SignUp">
     </form>
 </fieldset>
 
