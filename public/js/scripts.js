@@ -73,9 +73,6 @@ function addUser(){
 	event.preventDefault();
 })}
 
-
->>>>>>> 14c00f809697700a9187ace0033786b048260220
-
 function updateUser() {
 	console.log("Function updateUser() was called.")
 }
