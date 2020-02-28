@@ -264,7 +264,8 @@ app.get('/route_details', function(req, res, next){
 	rtQry += "	count(rating) as rating_count ";
 	rtQry += "	from Users_Routes ";
 	rtQry += "	group by route_id ";
-	rtQry += "	) ur on ur.route_id = rt.route_id ";
+	rtQry += ") ur on ur.route_id = rt.route_id ";
+	rtQry += "where rt.route_id = ? ";
 
 	mysql.pool.query(rtQry, req.query.route_id, function(err, rows, fields){
 		if (err) {
