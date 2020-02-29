@@ -226,7 +226,7 @@ function addRating() {
 					"State names must be less than 255 characters");
 				}
 				else {
-					window.location.href="/route_details";
+					window.location.reload();
 				}
 			}
 		});
