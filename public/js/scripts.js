@@ -128,7 +128,14 @@ function addRoute() {
 	});
 }
 
-//Complete for Step 5 - John does this one
+/***********************************************************
+ * Function to add a user to the database. Triggered by the
+ * SignUp button in the Register form on the login page.
+ * Passes the form data to index.js and then waits for a
+ * response from the server. On a successful response,
+ * refreshes the page. On a failed response, alerts the
+ * client.
+ **********************************************************/
 function addUser(){
 	document.getElementById('signUpButton').addEventListener('click', function(event){
 		var req = new XMLHttpRequest();
@@ -169,8 +176,14 @@ function deleteUser() {
 	console.log("Function deleteUser() was called.")
 }
 
-//Complete for Step 5 - John does this one 
-// I think this is mostly right? Not sure if the method needs to make a get request or not.
+/********************************************************************************
+ * Function to add a route rating to the database. Triggered by the
+ * SaveRating button in the Provide Route Rating form on the Route Details page.
+ * Passes the form data to index.js and then waits for a
+ * response from the server. On a successful response,
+ * refreshes the page. On a failed response, alerts the
+ * client.
+ ********************************************************************************/
 function addRating() {
 	document.getElementById('addRatingButton').addEventListener('click', function(event){
 		var req = new XMLHttpRequest();
