@@ -11,9 +11,9 @@
 <form>
 	<fieldset>
 	<legend>Add New Area</legend>
-		<input type="text" id = "area" name="area" placeholder="Area Name" required>
+		<input type="text" id = "area" name="area" placeholder="Area Name" required="required">
 		<input type="text" id = "approach" name = "approach" placeholder = "Approach" required>
-		State: <select type = "state" name = "state" required>
+		State: <select type = "state" id="state" name = "state" required>
 			{{#each states}}
 				<option value="{{this.state_id}}">{{this.state}}</option>
 			{{/each}}
