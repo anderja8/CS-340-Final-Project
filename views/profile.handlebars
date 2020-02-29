@@ -1,13 +1,22 @@
 <h1><a href='/'>Home</a></h1>
 
-<h3>Welcome **Username from DB**{{this.username}}</h3>
+<h3>Welcome {{username}}</h3>
 
 <form>
 	<fieldset>
 	<legend>Update profile information</legend>
-		<input type="text" id="first_name" name="first_name" value="**User First Name**" required><br>
-		<input type="text" id="last_name" name="last_name" value="**User Last Name**" required><br>
-		<input type="text" id="state" name="state" value="**User State (optional)**"><br>
+		First Name:  <input type="text" id="first_name" name="first_name" value="{{user_first_name}}" required><br>
+		Last Name:  <input type="text" id="last_name" name="last_name" value="{{user_last_name}}" required><br>
+		Home State: <select type="state" id="state" name="state" required>
+					<option value=""></option>
+			{{#each states}}
+				{{#if this.isUsrState}}
+					<option value="{{this.state_id}}" selected="selected">{{this.state}}</option>
+				{{else}}
+					<option value="{{this.state_id}}">{{this.state}}</option>
+				{{/if}}
+			{{/each}}
+		</select><br>
 		<button onclick="updateUser()">Update user profile</button><br>
 		<button onclick="deleteUser()">Delete user profile</button><br>
 	</fieldset>
@@ -16,15 +25,22 @@
 <br>
 <h3>Your Route Ratings:</h3>
 
-<table id="ratingTable">
-	<tr>
-		<th>Route Name</th>
-		<th>Rating</th>
-	</tr>
-	<tr>
-		<td>**Route Name**</td>
-		<td><input type="number" min=0 max=5 value=3></td>
-		<td><button onclick="updateRating()">Update Rating</button></td>
-		<td><button onclick="deleteRating()">Delete Rating</button></td>
-	</tr>
+{{#if ratings}}
+	<table id="ratingTable">
+		<tr>
+			<th>Route Name</th>
+			<th>Rating</th>
+		</tr>
+		{{#each ratings}}
+			<tr>
+				<td>{{this.route_title}}</td>
+				<td><input type="number" min=0 max=5 value={{this.rating}}></td>
+				<td><button onclick="updateRating()">Update Rating</button></td>
+				<td><button onclick="deleteRating()">Delete Rating</button></td>
+			</tr>
+		{{/each}}
+	</table>
+{{else}}
+	<p>You haven't rated any routes yet.</p>
+{{/if}}
 <script src="/js/scripts.js"></script>

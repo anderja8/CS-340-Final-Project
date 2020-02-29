@@ -309,27 +309,60 @@ app.get('/login', function(req, res, next) {
 
 //Render User profile page
 app.get('/profile', function(req, res, next){
-	stQry = "select state, state_id from States";
-	usrQry = "select first_name, last_name, username, user_id from Users where username = ?";
-	
-	mysql.pool.query(stQry, function(err, result){
-		if (err) {
-			console.log("Error querying States within /profile request.");
-		}
+	//If the user is crafty and tries to access this page without a valid username, redirect to the login page
+	if (typeof req.session.username == 'undefined') {
+		res.redirect('/login');
+	}
+	else {
+		stQry = "select st.state, st.state_id, "
+		stQry += "case when ur.state_id is not null then 1 else 0 end as isUsrState "
+		stQry += "from States st ";
+		stQry += "left join ( "
+		stQry += "	select state_id from Users where username = ? "
+		stQry += ") ur on ur.state_id = st.state_id "
+		stQry += "order by st.state asc ";
+		usrQry = "select first_name, last_name, username, user_id, state_id from Users where username = ? ";
 		
-		context = [];
-		context.states = rows;
-		
-		mysql.pool.query(usrQry, req.session.username, function(err, result){
+		mysql.pool.query(stQry, req.session.username, function(err, rows, fields){
 			if (err) {
-				console.log("Error querying Users within /profile request.");
+				console.log("Query was " + stQry);
+				console.log("Error querying States within /profile request.");
 			}
 			
-			context.user = rows;
-			res.render('profile')
+			context = [];
+			context.states = rows;
+			
+			mysql.pool.query(usrQry, req.session.username, function(err, rows, fields){
+				if (err) {
+					console.log("Error querying Users within /profile request.");
+				}
+				else if (rows.length < 1) {
+					console.log("Error, could not find user, sending to login page.");
+					res.redirect('/login');
+				}
+				else {
+					context.username = rows[0].username;
+					context.user_first_name = rows[0].first_name;
+					context.user_last_name = rows[0].last_name;
+					context.user_state_id = rows[0].state_id;
+
+					ratingQry = "select rt.route_title, urt.rating ";
+					ratingQry += "from Users_Routes urt ";
+					ratingQry += "inner join Routes rt on urt.route_id = rt.route_id ";
+					ratingQry += "where urt.user_id = ?";
+
+					mysql.pool.query(ratingQry, req.session.userid, function(err, rows, fields) {
+						if (err) {
+							console.log("Error querying Users_Routes in /profile.");
+						}
+						
+						context.ratings = rows;
+						res.render('profile', context);
+					});
+				}
+			});
 		});
-	});
-	
+	}
 });
 
 
