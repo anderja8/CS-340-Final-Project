@@ -13,6 +13,13 @@ function addState() {
 	var req = new XMLHttpRequest();
 	req.open("POST", '/add_state', true);
 	req.setRequestHeader('Content-Type', 'application/json');
+	
+	if (document.getElementById('state').value == "") {
+		alert("Please enter a state name.");
+		return;
+	}	
+
+	//Workaround because the required attribute is acting finicky on my machine
 	var reqData = {
 		state:document.getElementById('state').value
 	}
@@ -51,6 +58,13 @@ function addArea() {
 	var req = new XMLHttpRequest();
 	req.open("POST", '/add_area', true);
 	req.setRequestHeader('Content-Type', 'application/json');
+	
+	if (document.getElementById('area').value == "" || document.getElementById('approach').value == "") {
+		alert("Please ensure area name and approach are entered.");
+		return;
+	}
+
+	//Workaround because the required attribute is acting finicky on my machine
 	var reqData = {
 		state_id:document.getElementById('state').value,
 		name:document.getElementById('area').value,
@@ -107,6 +121,15 @@ function addRoute() {
 		first_ascent_date:document.getElementById('fa_date').value,
 		pitch_count:document.getElementById('pitch').value
 	}
+
+	//Workaround because the required attribute is acting finicky on my machine
+	if (document.getElementById('title').value == "" || document.getElementById('overview').value == "" ||
+		document.getElementById('grade').value == "" || document.getElementById('approach').value == "" ||
+		document.getElementById('pitch').value == "") {
+		alert("Please ensure route title, overview, grade, approach, and pitch are entered.");
+		return;
+	}
+
 
 	//Send the request
 	req.send(JSON.stringify(reqData));
