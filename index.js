@@ -252,11 +252,22 @@ app.post('/login/post', function(req, res, next){
 		var context = {};
   		mysql.pool.query(qry, [req.query.c], function(err, result){
 			if(err){
-			next(err);
-			return;
+				next(err);
+				return;
 			}
-			context.results = "first_name" + result.insertId;
-			res.render('/',context);
+			qry = "select user_id, username, password, first_name, last_name from Users where username=? and password=?";
+				mysql.pool.query(qry, [req.query.username, req.query.password], function(err, rows, fields) {
+					//If the results length is 1, we found the user, set session values
+					if (rows.length > 0) {
+						req.session.userid = rows[0].user_id;
+						req.session.name = rows[0].first_name + " " + rows[0].last_name;
+						res.redirect('/');
+					} 
+					else {
+						next(err)
+						return;
+					}
+				});
 		});
 	}
 });
