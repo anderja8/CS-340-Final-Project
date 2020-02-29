@@ -137,6 +137,23 @@ app.get('/browse_areas', function(req, res, next) {
 	});
 });
 
+//Handle adding an area to the database
+app.post('/add_area', function(req, res, next) {
+	inQry = "insert into Areas (name, approach, state_id) values (?, ?, ?)";
+	mysql.pool.query(inQry, [req.body.name, req.body.approach, req.body.state_id], function(err, result){
+		if (err) {
+			console.log("Error adding area to db.");
+			var payload = {resValue: 0}
+			res.send(JSON.stringify(payload));
+		}
+		else {
+			console.log("Area created");
+			var payload = {resValue: 1}
+			res.send(JSON.stringify(payload));
+		}
+	});
+});
+
 //Render the browse routes page (Extremely similar to the browse areas page)
 app.get('/browse_routes', function(req, res, next) {
 
@@ -197,6 +214,31 @@ app.get('/browse_routes', function(req, res, next) {
 			//Render the page
 			res.render('browse_routes', context);
 		});
+	});
+});
+
+//Handle adding a route to the database
+app.post('/add_route', function(req, res, next) {
+	//Unlike the other browse pages, it's possible for NULL values to be passed through the routes form
+	//We'll clean those NULL values by running the body array through nullify
+	nullify(req.body);
+
+	inQry = "insert into Routes (route_title, area_id, overview, grade, type, approach, latitude, longitude, ";
+	inQry += "first_ascent, first_ascent_date, pitch_count) ";
+	inQry += "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+	mysql.pool.query(inQry, [req.body.route_title, req.body.area_id, req.body.overview, req.body.grade,
+			req.body.type, req.body.approach, req.body.latitude, req.body.longitude,
+			req.body.first_ascent, req.body.first_ascent_date, req.body.pitch_count],
+			function(err, result){
+		if (err) {
+			var payload = {resValue: 0}
+			res.send(JSON.stringify(payload));
+		}
+		else {
+			console.log("Route created");
+			var payload = {resValue: 1}
+			res.send(JSON.stringify(payload));
+		}
 	});
 });
 

@@ -32,22 +32,101 @@ function addState() {
 				"State names must be less than 255 characters");
 			}
 			else {
-				window.location.href="/browse_states";
+				window.location.reload();
 			}
 		}
 	});
 }
 
-//Complete for Step 5
+/***********************************************************
+ * Function to add an area to the database. Triggered by the
+ * button in the add area form on the browse areas page.
+ * Passes the form data to index.js and then waits for a
+ * response from the server. On a successful response,
+ * refreshes the page. On a failed response, alerts the
+ * client.
+ **********************************************************/
 function addArea() {
-	console.log("Function addArea() was called.")
+	//Create the request
+	var req = new XMLHttpRequest();
+	req.open("POST", '/add_area', true);
+	req.setRequestHeader('Content-Type', 'application/json');
+	var reqData = {
+		state_id:document.getElementById('state').value,
+		name:document.getElementById('area').value,
+		approach:document.getElementById('approach').value
+	}
+
+	//Send the request
+	req.send(JSON.stringify(reqData));
+
+	//Wait on a response from the server. Will be either 1 (OK) or 0 (Error)
+	req.addEventListener('load', function() {
+		if (req.status < 200 && req.status > 400) {
+			alert("Network error: server could not make contact with database.");
+		}
+		else {
+			var retData = JSON.parse(req.responseText);
+			if (retData["resValue"] == 0) {
+				alert("Error: invalid form inputs. Please correct form inputs and try again. " + 
+				"Area names must be less than 255 characters and approach less than 10000.");
+			}
+			else {
+				window.location.reload();
+			}
+		}
+	});
+	event.preventDefault();
 }
 
-//Complete for Step 5
+/***********************************************************
+ * Function to add a route to the database. Triggered by the
+ * button in the add route form on the browse routes page.
+ * Passes the form data to index.js and then waits for a
+ * response from the server. On a successful response,
+ * refreshes the page. On a failed response, alerts the
+ * client.
+ **********************************************************/
 function addRoute() {
-	console.log("Function addRoute() was called.")
-}
+	event.preventDefault();
+	
+	//Create the request
+	var req = new XMLHttpRequest();
+	req.open("POST", '/add_route', true);
+	req.setRequestHeader('Content-Type', 'application/json');
+	var reqData = {
+		route_title:document.getElementById('title').value,
+		area_id:document.getElementById('area').value,
+		overview:document.getElementById('overview').value,
+		grade:document.getElementById('grade').value,
+		type:document.getElementById('type').value,
+		approach:document.getElementById('approach').value,
+		latitude:document.getElementById('lat').value,
+		longitude:document.getElementById('long').value,
+		first_ascent:document.getElementById('fa').value,
+		first_ascent_date:document.getElementById('fa_date').value,
+		pitch_count:document.getElementById('pitch').value
+	}
 
+	//Send the request
+	req.send(JSON.stringify(reqData));
+
+	//Wait on a response from the server. Will be either 1 (OK) or 0 (Error)
+	req.addEventListener('load', function() {
+		if (req.status < 200 && req.status > 400) {
+			alert("Network error: server could not make contact with database.");
+		}
+		else {
+			var retData = JSON.parse(req.responseText);
+			if (retData["resValue"] == 0) {
+				alert("Error: invalid form inputs. Please correct form inputs and try again. ");
+			}
+			else {
+				window.location.reload();
+			}
+		}
+	});
+}
 
 //Complete for Step 5 - John does this one
 function addUser(){
