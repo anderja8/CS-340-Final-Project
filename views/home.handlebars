@@ -19,7 +19,11 @@ Simarly, you can filter the route list to show routes only for a particular clim
 in the area list.</p>
 
 <ul>
-	<li><a href="/profile">Manage user account</a></li>
+	{{#if this.user}}
+		<li><a href="/profile">Manage user account</a></li>
+	{{else}}
+		<li>Please <a href="/login">login</a> to edit your account</li>
+	{{/if}}
 	<li><a href="/browse_states">Browse/Add States</a></li>
 	<li><a href="/browse_areas">Browse/Add Areas</a></li>
 	<li><a href="/browse_routes">Browse/Add Routes</a></li>

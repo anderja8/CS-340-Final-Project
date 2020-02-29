@@ -363,6 +363,7 @@ app.get('/route_details', function(req, res, next){
 		
 		context = [];
 		context.results = rows;
+		context.userid = req.session.userid;
 		res.render('route_details', context)
 	});
 });
