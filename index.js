@@ -259,6 +259,7 @@ app.post('/login/post', function(req, res, next){
 				mysql.pool.query(qry, [req.query.username, req.query.password], function(err, rows, fields) {
 					//If the results length is 1, we found the user, set session values
 					if (rows.length > 0) {
+						req.session.username = rows[0].username;
 						req.session.userid = rows[0].user_id;
 						req.session.name = rows[0].first_name + " " + rows[0].last_name;
 						res.redirect('/');
@@ -281,6 +282,7 @@ app.get('/login', function(req, res, next) {
 		mysql.pool.query(qry, [req.query.username, req.query.password], function(err, rows, fields) {
 			//If the results length is 1, we found the user, set session values
 			if (rows.length > 0) {
+				req.session.username = rows[0].username;
 				req.session.userid = rows[0].user_id;
 				req.session.name = rows[0].first_name + " " + rows[0].last_name;
 				res.redirect('/');
@@ -312,21 +314,23 @@ app.get('/profile', function(req, res, next){
 	
 	mysql.pool.query(stQry, function(err, result){
 		if (err) {
-			console.log("Error querying States within /profile request.")
+			console.log("Error querying States within /profile request.");
 		}
 		
 		context = [];
 		context.states = rows;
 		
-		mysql.pool.query(usrQry, req.session.username
-
-
-
-	res.render('profile')
-
+		mysql.pool.query(usrQry, req.session.username, function(err, result){
+			if (err) {
+				console.log("Error querying Users within /profile request.");
+			}
+			
+			context.user = rows;
+			res.render('profile')
+		});
+	});
 	
 });
-
 
 
 app.post('/add_rating', function(req, res, next){
