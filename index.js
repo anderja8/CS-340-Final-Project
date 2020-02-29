@@ -294,16 +294,26 @@ app.get('/login', function(req, res, next) {
 	}
 });
 
-//Check login credentials
-app.get('/login/:username/:password', function(req, res, next) {
-	let context = {};
-});
-
-
 //Render User profile page
 app.get('/profile', function(req, res, next){
+	stQry = "select state, state_id from States";
+	usrQry = "select first_name, last_name, username, user_id from Users where username = ?";
+	
+	mysql.pool.query(stQry, function(err, result){
+		if (err) {
+			console.log("Error querying States within /profile request.")
+		}
+		
+		context = [];
+		context.states = rows;
+		
+		mysql.pool.query(usrQry, req.session.username
+
+
+
 	res.render('profile')
-	//need query results for user info
+
+	
 });
 
 
