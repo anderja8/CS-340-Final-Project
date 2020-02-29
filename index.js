@@ -264,6 +264,24 @@ app.get('/profile', function(req, res, next){
 	//need query results for user info
 });
 
+
+
+app.post('/add_rating', function(req, res, next){
+	mysql.pool.query("insert into Users_Routes (rating) values (?)", req.body.rating, function(err, result){
+		if(err){
+			console.log("Error adding state to db. State name was: " + req.body.rating);
+			var payload = {resValue: 0}
+			res.send(JSON.stringify(payload));
+		}
+		else {
+			console.log("Route rating created");
+			var payload = {resValue: 1}
+			res.send(JSON.stringify(payload));
+		}
+	})
+});
+
+
 app.get('/route_details', function(req, res, next){
 
 	//Setting up the queries to render the page data
