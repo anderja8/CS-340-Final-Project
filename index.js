@@ -247,10 +247,11 @@ app.post('/login/post', function(req, res, next){
 	if (req.query.buttonFunc == "SignUp") {
 		qry = "insert into Users"
 		qry += "(first_name, last_name, username, password, state_id)"
-		qry += "values (?);"
+		qry += "values (?, ?, ?, ?, ?);"
 
-		var context = {};
-  		mysql.pool.query(qry, [req.query.c], function(err, result){
+		mysql.pool.query(qry, [req.query.first_name, req.query.last_name, 
+				req.query.username, req.query.password, req.query.state_id], 
+				function(err, result){
 			if(err){
 				next(err);
 				return;
@@ -367,7 +368,7 @@ app.get('/profile', function(req, res, next){
 
 
 app.post('/add_rating', function(req, res, next){
-	mysql.pool.query("insert into Users_Routes (rating) values (?)", req.body.rating, function(err, result){
+	mysql.pool.query("insert into Users_Routes (user_id, route_id, rating) values (?, ?, ?)", session.userid, session.route_id, req.body.rating, function(err, result){
 		if(err){
 			console.log("Error adding state to db. State name was: " + req.body.rating);
 			var payload = {resValue: 0}
@@ -408,6 +409,9 @@ app.get('/route_details', function(req, res, next){
 			console.log("route_id was: " + req.query.route_id);
 		}
 		
+		// create session variable to store route_id for addRating()
+		req.session.route_id = rows[0].route_id;
+
 		context = [];
 		context.results = rows;
 		context.userid = req.session.userid;
