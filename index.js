@@ -368,7 +368,7 @@ app.get('/profile', function(req, res, next){
 
 
 app.post('/add_rating', function(req, res, next){
-	mysql.pool.query("insert into Users_Routes (user_id, route_id, rating) values (?, ?, ?)", session.userid, session.route_id, req.body.rating, function(err, result){
+	mysql.pool.query("insert into Users_Routes (user_id, route_id, rating) values (?, ?, ?)", req.session.userid, req.session.route_id, req.body.rating, function(err, result){
 		if(err){
 			console.log("Error adding state to db. State name was: " + req.body.rating);
 			var payload = {resValue: 0}
