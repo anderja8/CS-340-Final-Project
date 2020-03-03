@@ -173,6 +173,7 @@ function addUser(){
 		req.setRequestHeader('Content-Type', 'application/json');
 		req.addEventListener('load', function(){
 			if (req.status < 200 && req.status > 400) {
+				console.log("Network error: server could not make contact with database.");
 				alert("Network error: server could not make contact with database.");
 			}
 			else {
