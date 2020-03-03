@@ -249,8 +249,8 @@ app.post('/login/post', function(req, res, next){
 		qry += "(first_name, last_name, username, password, state_id)"
 		qry += "values (?, ?, ?, ?, ?);"
 
-		mysql.pool.query(qry, [req.query.first_name, req.query.last_name, 
-				req.query.username, req.query.password, req.query.state_id], 
+		mysql.pool.query(qry, [req.body.first_name, req.body.last_name, 
+				req.body.username, req.body.password, req.body.state_id], 
 				function(err, result){
 			if(err){
 				next(err);
