@@ -255,7 +255,7 @@ app.post('/login/post', function(req, res, next){
 			if(err){
 				next(err);
 				return;
-			}
+			} else {
 			qry = "select user_id, username, password, first_name, last_name from Users where username=? and password=?";
 				mysql.pool.query(qry, [req.query.username, req.query.password], function(err, rows, fields) {
 					//If the results length is 1, we found the user, set session values
@@ -270,7 +270,7 @@ app.post('/login/post', function(req, res, next){
 						return;
 					}
 				});
-		});
+				}});
 	}
 });
 
