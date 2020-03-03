@@ -247,7 +247,7 @@ app.post('/login_post', function(req, res, next){
 	//if (req.query.buttonFunc == "SignUp") {
 		qry = "insert into Users "
 		qry += "(first_name, last_name, username, password, state_id) "
-		qry += "values (?, ?, ?, ?, ?);"
+		qry += "values (?, ?, ?, ?, ?)"
 
 		mysql.pool.query(qry, [req.body.first_name, req.body.last_name, 
 				req.body.username, req.body.password, req.body.state_id], 
