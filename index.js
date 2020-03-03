@@ -410,7 +410,7 @@ app.get('/route_details', function(req, res, next){
 		}
 		
 		// create session variable to store route_id for addRating()
-		req.session.route_id = rows[0].route_id;
+		req.session.route_id = req.query.route_id;
 
 		context = [];
 		context.results = rows;
