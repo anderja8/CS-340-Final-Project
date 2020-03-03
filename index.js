@@ -244,7 +244,7 @@ app.post('/add_route', function(req, res, next) {
 
 //Post handler for creating new account
 app.post('/login/post', function(req, res, next){
-	if (req.query.buttonFunc == "SignUp") {
+	//if (req.query.buttonFunc == "SignUp") {
 		qry = "insert into Users"
 		qry += "(first_name, last_name, username, password, state_id)"
 		qry += "values (?, ?, ?, ?, ?);"
@@ -271,7 +271,7 @@ app.post('/login/post', function(req, res, next){
 					}
 				});
 				}});
-	}
+	//}
 });
 
 //Render the login page, redirect if sign up or login submit buttons pressed
