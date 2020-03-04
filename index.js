@@ -394,6 +394,26 @@ app.post('/update_rating', function(req, res, next) {
 		}
 	});
 });
+
+app.post('/delete_rating', function(req, res, next) {
+
+	urQry = "delete from Users_Routes where route_id = ? and user_id = ?",
+	mysql.pool.query(urQry, [req.body.route_id, req.session.userid], function(err, result){
+		if(err){
+			console.log("Error deleting Users_Routes.");
+			console.log("route_id: " + req.body.route_id);
+			console.log("userid: " + req.session.userid);
+			var payload = {resValue: 0}
+			res.send(JSON.stringify(payload));
+		}
+		else {
+			console.log("Route rating deleted.");
+			var payload = {resValue: 1}
+			res.send(JSON.stringify(payload));
+		}
+	});
+});
+
 app.post('/add_rating', function(req, res, next){
 	mysql.pool.query("insert into Users_Routes (user_id, route_id, rating) values (?, ?, ?)", req.session.userid, req.session.route_id, req.body.rating, function(err, result){
 		if(err){
