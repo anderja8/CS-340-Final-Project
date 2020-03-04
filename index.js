@@ -243,18 +243,19 @@ app.post('/add_route', function(req, res, next) {
 });
 
 //Post handler for creating new account
-app.post('/login/post', function(req, res, next){
-	if (req.query.buttonFunc == "SignUp") {
-		qry = "insert into Users"
-		qry += "(first_name, last_name, username, password, state_id)"
-		qry += "values (?);"
+app.post('/login_post', function(req, res, next){
+	//if (req.query.buttonFunc == "SignUp") {
+		qry = "insert into Users "
+		qry += "(first_name, last_name, username, password, state_id) "
+		qry += "values (?, ?, ?, ?, ?)"
 
-		var context = {};
-  		mysql.pool.query(qry, [req.query.c], function(err, result){
+		mysql.pool.query(qry, [req.body.first_name, req.body.last_name, 
+				req.body.username, req.body.password, req.body.state_id], 
+				function(err, result){
 			if(err){
 				next(err);
 				return;
-			}
+			} else {
 			qry = "select user_id, username, password, first_name, last_name from Users where username=? and password=?";
 				mysql.pool.query(qry, [req.query.username, req.query.password], function(err, rows, fields) {
 					//If the results length is 1, we found the user, set session values
@@ -269,8 +270,8 @@ app.post('/login/post', function(req, res, next){
 						return;
 					}
 				});
-		});
-	}
+			}});
+	//}
 });
 
 //Render the login page, redirect if sign up or login submit buttons pressed
@@ -394,7 +395,7 @@ app.post('/update_rating', function(req, res, next) {
 	});
 });
 app.post('/add_rating', function(req, res, next){
-	mysql.pool.query("insert into Users_Routes (rating) values (?)", req.body.rating, function(err, result){
+	mysql.pool.query("insert into Users_Routes (user_id, route_id, rating) values (?, ?, ?)", req.session.userid, req.session.route_id, req.body.rating, function(err, result){
 		if(err){
 			console.log("Error adding state to db. State name was: " + req.body.rating);
 			var payload = {resValue: 0}
@@ -435,6 +436,9 @@ app.get('/route_details', function(req, res, next){
 			console.log("route_id was: " + req.query.route_id);
 		}
 		
+		// create session variable to store route_id for addRating()
+		req.session.route_id = req.query.route_id;
+
 		context = [];
 		context.results = rows;
 		context.userid = req.session.userid;
