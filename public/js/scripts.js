@@ -234,8 +234,54 @@ function addRating() {
 		event.preventDefault();
 	});
 };
-function updateRating() {
-	console.log("Function updateRating() was called.")
+
+/********************************************************************************
+ * Function to update a user's rating. Triggered by browsing to the user's profile
+ * page and clicking the "Update Rating" button next to the user's rating of a 
+ * particular route. Note: This will only appear if the user has actually rated
+ * a route and saved that rating to the database, which is first done on the route
+ * details page. On a successful response from the server,refreshes the page. On a
+ * failed response, alerts the client.
+ ********************************************************************************/
+function updateRating(route_num) {
+	event.preventDefault();
+	
+	//Create the request
+	var req = new XMLHttpRequest();
+	req.open("POST", '/update_rating', true);
+	req.setRequestHeader('Content-Type', 'application/json');
+
+	if (document.getElementById('rating_' + route_num).value == "") {
+		alert("Please enter a rating for the route.");
+		return;
+	}
+	
+	//Build the payload
+	var reqData = {
+		route_id:route_num,
+		rating:document.getElementById('rating_' + route_num).value
+	}
+
+
+
+	//Send the request
+	req.send(JSON.stringify(reqData));
+
+	//Wait on a response from the server. Will be either 1 (OK) or 0 (Error)
+	req.addEventListener('load', function() {
+		if (req.status < 200 && req.status > 400) {
+			alert("Network error: server could not make contact with database.");
+		}
+		else {
+			var retData = JSON.parse(req.responseText);
+			if (retData["resValue"] == 0) {
+				alert("Error: invalid form inputs. Please correct form inputs and try again.");
+			}
+			else {
+				window.location.reload();
+			}
+		}
+	});
 }
 
 function deleteRating() {

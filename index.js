@@ -307,6 +307,15 @@ app.get('/login', function(req, res, next) {
 	}
 });
 
+//Log the user out
+app.get('/logout', function(req, res, next) {
+	req.session.username = null;
+	req.session.userid = null;
+	req.session.name = null;
+	let context = {};
+	res.render('home', context);
+});
+
 //Render User profile page
 app.get('/profile', function(req, res, next){
 	//If the user is crafty and tries to access this page without a valid username, redirect to the login page
@@ -346,7 +355,7 @@ app.get('/profile', function(req, res, next){
 					context.user_last_name = rows[0].last_name;
 					context.user_state_id = rows[0].state_id;
 
-					ratingQry = "select rt.route_title, urt.rating ";
+					ratingQry = "select rt.route_title, rt.route_id, urt.rating ";
 					ratingQry += "from Users_Routes urt ";
 					ratingQry += "inner join Routes rt on urt.route_id = rt.route_id ";
 					ratingQry += "where urt.user_id = ?";
@@ -365,7 +374,25 @@ app.get('/profile', function(req, res, next){
 	}
 });
 
+app.post('/update_rating', function(req, res, next) {
 
+	urQry = "update Users_Routes set rating = ? where route_id = ? and user_id = ?",
+	mysql.pool.query(urQry, [req.body.rating, req.body.route_id, req.session.userid], function(err, result){
+		if(err){
+			console.log("Error updating Users_Routes.");
+			console.log("rating: " + req.body.rating);
+			console.log("route_id: " + req.body.route_id);
+			console.log("userid: " + req.session.userid);
+			var payload = {resValue: 0}
+			res.send(JSON.stringify(payload));
+		}
+		else {
+			console.log("Route rating updated.");
+			var payload = {resValue: 1}
+			res.send(JSON.stringify(payload));
+		}
+	});
+});
 app.post('/add_rating', function(req, res, next){
 	mysql.pool.query("insert into Users_Routes (rating) values (?)", req.body.rating, function(err, result){
 		if(err){

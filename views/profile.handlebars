@@ -34,9 +34,9 @@
 		{{#each ratings}}
 			<tr>
 				<td>{{this.route_title}}</td>
-				<td><input type="number" min=0 max=5 value={{this.rating}}></td>
-				<td><button onclick="updateRating()">Update Rating</button></td>
-				<td><button onclick="deleteRating()">Delete Rating</button></td>
+				<td><input type="number" id="rating_{{this.route_id}}" min=0 max=5 value={{this.rating}}></td>
+				<td><button onclick="updateRating({{this.route_id}})">Update Rating</button></td>
+				<td><button onclick="deleteRating({{this.route_id}})">Delete Rating</button></td>
 			</tr>
 		{{/each}}
 	</table>
