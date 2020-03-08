@@ -303,7 +303,7 @@ app.get('/login', function(req, res, next) {
 			
 			context = [];
 			context.results = rows;
-			res.render('login', context);
+			res.render('/', context);
 		});
 	}
 });
