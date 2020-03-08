@@ -168,7 +168,7 @@ function addUser(){
 			last_name:document.getElementById('logInLastName').value,
 			username:document.getElementById('logInUserName').value,
 			password:document.getElementById('logInPassword').value,
-			state_id:document.getElementById('logInState').value
+			state_id:document.getElementById('state').value
 		}
 		req.open("POST", '/login_post', true);
 		req.setRequestHeader('Content-Type', 'application/json');

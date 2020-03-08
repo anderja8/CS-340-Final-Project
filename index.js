@@ -244,34 +244,39 @@ app.post('/add_route', function(req, res, next) {
 
 //Post handler for creating new account
 app.post('/login_post', function(req, res, next){
-	if (req.query.buttonFunc == "SignUp") {
-		qry = "insert into Users "
-		qry += "(first_name, last_name, username, password, state_id) "
-		qry += "values (?, ?, ?, ?, ?)"
+	qry = "insert into Users "
+	qry += "(first_name, last_name, username, password, state_id) "
+	qry += "values (?, ?, ?, ?, ?)"
 
-		mysql.pool.query(qry, [req.body.first_name, req.body.last_name, 
-				req.body.username, req.body.password, req.body.state_id], 
-				function(err, result){
-			if(err){
-				next(err);
-				return;
-			} else {
-			qry = "select user_id, username, password, first_name, last_name from Users where username=? and password=?";
-				mysql.pool.query(qry, [req.query.username, req.query.password], function(err, rows, fields) {
-					//If the results length is 1, we found the user, set session values
-					if (rows.length > 0) {
-						req.session.username = rows[0].username;
-						req.session.userid = rows[0].user_id;
-						req.session.name = rows[0].first_name + " " + rows[0].last_name;
-						res.redirect('/');
-					} 
-					else {
-						next(err)
-						return;
-					}
-				});
-			}});
-	}
+	console.log("body is:");
+	console.log(req.body);
+	console.log("qry is:" + qry);
+
+	nullify(req.body);
+
+	mysql.pool.query(qry, [req.body.first_name, req.body.last_name, 
+			req.body.username, req.body.password, req.body.state_id], 
+			function(err, result){
+		if(err){
+			var payload = {resValue: 0}
+			res.send(JSON.stringify(payload));
+		} else {
+		qry = "select user_id, username, password, first_name, last_name from Users where username=? and password=?";
+			mysql.pool.query(qry, [req.body.username, req.body.password], function(err, rows, fields) {
+				//If the results length is 1, we found the user, set session values
+				if (rows.length > 0) {
+					req.session.username = rows[0].username;
+					req.session.userid = rows[0].user_id;
+					req.session.name = rows[0].first_name + " " + rows[0].last_name;
+					var payload = {resValue: 1}
+					res.send(JSON.stringify(payload));
+				} 
+				else {
+					next(err)
+					return;
+				}
+			});
+		}});
 });
 
 //Render the login page, redirect if sign up or login submit buttons pressed
