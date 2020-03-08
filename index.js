@@ -248,10 +248,6 @@ app.post('/login_post', function(req, res, next){
 	qry += "(first_name, last_name, username, password, state_id) "
 	qry += "values (?, ?, ?, ?, ?)"
 
-	console.log("body is:");
-	console.log(req.body);
-	console.log("qry is:" + qry);
-
 	nullify(req.body);
 
 	mysql.pool.query(qry, [req.body.first_name, req.body.last_name, 
