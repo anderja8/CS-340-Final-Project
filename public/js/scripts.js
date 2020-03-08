@@ -160,6 +160,7 @@ function addRoute() {
  * client.
  **********************************************************/
 function addUser(){
+	alert('add user called');
 	//document.getElementById('signUpButton').addEventListener('click', function(event){
 		var req = new XMLHttpRequest();
 		var reqData = {
