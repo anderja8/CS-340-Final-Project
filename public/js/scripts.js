@@ -194,11 +194,75 @@ function addUser(){
 };
 
 function updateUser() {
-	console.log("Function updateUser() was called.")
+	confirm("Are you sure you want to update your account?");
+	event.preventDefault();
+	
+	//Create the request
+	var req = new XMLHttpRequest();
+	req.open("POST", '/update_user', true);
+	req.setRequestHeader('Content-Type', 'application/json');
+
+	//Build the payload
+	var reqData = {
+		first_name:document.getElementById("first_name").value,
+		last_name:document.getElementById("last_name").value,
+		state_id:document.getElementById("state").value,
+	}
+
+	//Send the request
+	req.send(JSON.stringify(reqData));
+
+	//Wait on a response from the server. Will be either 1 (OK) or 0 (Error)
+	req.addEventListener('load', function() {
+		if (req.status < 200 && req.status > 400) {
+			alert("Network error: server could not make contact with database.");
+		}
+		else {
+			var retData = JSON.parse(req.responseText);
+			if (retData["resValue"] == 0) {
+				alert("Error: invalid form inputs. Please correct form inputs and try again.");
+			}
+			else {
+				window.location.reload();
+			}
+		}
+	});
 }
 
 function deleteUser() {
-	console.log("Function deleteUser() was called.")
+	confirm("Are you sure you want to delete your account?");
+	event.preventDefault();
+	
+	//Create the request
+	var req = new XMLHttpRequest();
+	req.open("POST", '/delete_user', true);
+	req.setRequestHeader('Content-Type', 'application/json');
+	
+	//Build the payload
+	var reqData = {
+		first_name:document.getElementById("first_name").value,
+		last_name:document.getElementById("last_name").value,
+		state_id:document.getElementById("state").value,
+	}
+
+	//Send the request
+	req.send(JSON.stringify(reqData));
+
+	//Wait on a response from the server. Will be either 1 (OK) or 0 (Error)
+	req.addEventListener('load', function() {
+		if (req.status < 200 && req.status > 400) {
+			alert("Network error: server could not make contact with database.");
+		}
+		else {
+			var retData = JSON.parse(req.responseText);
+			if (retData["resValue"] == 0) {
+				alert("Error: User Profile couldn't be deleted.");
+			}
+			else {
+				window.location.href="/";
+			}
+		}
+	});
 }
 
 /********************************************************************************

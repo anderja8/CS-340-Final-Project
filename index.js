@@ -275,6 +275,46 @@ app.post('/login_post', function(req, res, next){
 		}});
 });
 
+// Handler to update user account info
+app.post('/update_user', function(req, res, next) {
+
+	urQry = "update Users set first_name = ?, last_name = ?, state_id = ? where user_id = ?",
+	mysql.pool.query(urQry, [req.body.first_name, req.body.last_name, req.body.state_id, req.session.userid], function(err, result){
+		if(err){
+			console.log("Error updating Users.");
+			console.log("userid: " + req.session.userid);
+			var payload = {resValue: 0}
+			res.send(JSON.stringify(payload));
+		}
+		else {
+			console.log("Route rating updated.");
+			var payload = {resValue: 1}
+			res.send(JSON.stringify(payload));
+		}
+	});
+});
+
+//Handler to delete user account
+app.post('/delete_user', function(req, res, next) {
+
+	urQry = "delete from Users where user_id = ? ",
+	mysql.pool.query(urQry, [req.session.userid], function(err, result){
+		if(err){
+			console.log("Error deleting User.");
+			console.log("userid: " + req.session.userid);
+			var payload = {resValue: 0}
+			res.send(JSON.stringify(payload));
+		}
+		else {
+			req.session.userid = '';
+			console.log("Route rating deleted.");
+			var payload = {resValue: 1}
+			res.send(JSON.stringify(payload));
+		}
+	});
+});
+
+
 //Render the login page, redirect if sign up or login submit buttons pressed
 app.get('/login', function(req, res, next) {
 
@@ -415,8 +455,10 @@ app.post('/delete_rating', function(req, res, next) {
 	});
 });
 
+// This isn't working yet. The route_id is undefined. 
 app.post('/add_rating', function(req, res, next){
-	mysql.pool.query("insert into Users_Routes (user_id, route_id, rating) values (?, ?, ?)", req.session.userid, req.session.route_id, req.body.rating, function(err, result){
+	addQry = "insert into Users_Routes (user_id, route_id, rating) values (?, ?, ?)",
+	mysql.pool.query(addQry, [req.session.userid, req.session.route_id, req.body.rating], function(err, result){
 		if(err){
 			console.log("Error adding state to db. State name was: " + req.body.rating);
 			var payload = {resValue: 0}
