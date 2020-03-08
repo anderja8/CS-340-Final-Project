@@ -294,7 +294,6 @@ app.get('/login', function(req, res, next) {
 			}
 		});
 	}
-	/*
 	else {
 		qry = "select state, state_id from States order by state asc";
 		mysql.pool.query(qry, function(err, rows, fields) {
@@ -307,7 +306,6 @@ app.get('/login', function(req, res, next) {
 			res.render('login', context);
 		});
 	}
-		*/
 });
 
 //Render User profile page
