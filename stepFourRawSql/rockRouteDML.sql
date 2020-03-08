@@ -134,6 +134,21 @@ from Users_Routes
 left join Routes on Routes.route_id = Users_Routes.route_id
 where Users_Routes.user_id = :loggedInUser;
 
+-- Display user info
+select st.state, st.state_id,
+case when ur.state_id is not null then 1 else 0 end as isUsrState 
+from States st
+left join ( 
+select state_id from Users where username = :? 
+) ur on ur.state_id = st.state_id 
+order by st.state asc 
+select first_name, last_name, username, user_id, state_id from Users where username = :?
+
+-- Display user route ratings
+select rt.route_title, urt.rating 
+from Users_Routes urt 
+inner join Routes rt on urt.route_id = rt.route_id
+where urt.user_id = :?
 
 --Update User info
 update Users
