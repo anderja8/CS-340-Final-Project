@@ -160,7 +160,7 @@ function addRoute() {
  * client.
  **********************************************************/
 function addUser(){
-	document.getElementById('signUpButton').addEventListener('click', function(event){
+	//document.getElementById('signUpButton').addEventListener('click', function(event){
 		var req = new XMLHttpRequest();
 		var reqData = {
 			first_name:document.getElementById('logInFirstName').value,
@@ -189,7 +189,7 @@ function addUser(){
 		});
 		req.send(JSON.stringify(reqData));
 		event.preventDefault();
-	});
+	//});
 };
 
 function updateUser() {
@@ -282,7 +282,7 @@ function updateRating(route_num) {
 		}
 	});
 }
-
+ 
 /********************************************************************************
  * Function to delete a user's rating. Triggered by browsing to the user's profile
  * page and clicking the "Delete Rating" button next to the user's rating of a 
