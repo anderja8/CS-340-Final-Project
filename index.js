@@ -287,7 +287,7 @@ app.post('/update_user', function(req, res, next) {
 			res.send(JSON.stringify(payload));
 		}
 		else {
-			console.log("Route rating updated.");
+			console.log("User account updated.");
 			var payload = {resValue: 1}
 			res.send(JSON.stringify(payload));
 		}
@@ -455,12 +455,12 @@ app.post('/delete_rating', function(req, res, next) {
 	});
 });
 
-// This isn't working yet. The route_id is undefined. 
 app.post('/add_rating', function(req, res, next){
-	addQry = "insert into Users_Routes (user_id, route_id, rating) values (?, ?, ?)",
-	mysql.pool.query(addQry, [req.session.userid, req.session.route_id, req.body.rating], function(err, result){
+	addQry = "insert into Users_Routes (user_id, route_id, rating) values (?, ?, ?) ";
+	addQry += "on duplicate key update rating=values(rating)";
+	mysql.pool.query(addQry, [req.session.userid, req.body.route_id, req.body.rating, req.body.rating], function(err, result){
 		if(err){
-			console.log("Error adding state to db. State name was: " + req.body.rating);
+			console.log("Error adding rating to db.");
 			var payload = {resValue: 0}
 			res.send(JSON.stringify(payload));
 		}
@@ -471,7 +471,6 @@ app.post('/add_rating', function(req, res, next){
 		}
 	})
 });
-
 
 app.get('/route_details', function(req, res, next){
 
@@ -499,13 +498,33 @@ app.get('/route_details', function(req, res, next){
 			console.log("route_id was: " + req.query.route_id);
 		}
 		
-		// create session variable to store route_id for addRating()
-		req.session.route_id = req.query.route_id;
-
 		context = [];
 		context.results = rows;
 		context.userid = req.session.userid;
-		res.render('route_details', context)
+
+		// If the user is not logged in, we'll render now, otherwise, get their old rating for
+		// the route, if it exists, and send that as well
+		if (req.session.userid == null) {	
+			res.render('route_details', context);
+		}
+		else {
+			usrQry = "select rating from Users_Routes where user_id = ? and route_id = ?";
+			mysql.pool.query(usrQry, [req.session.userid, req.query.route_id], function(err, rows, fields){
+				if (err) {
+					console.log("Error querying Users_Routes.");
+					console.log("userid: " + req.session.userid);
+					console.log("route_id: " + req.query.route_id);
+					res.render('route_details', context);
+				}
+				else if (rows.length == 0) {
+					res.render('route_details', context);
+				}
+				else {
+					context.user_rating = rows[0].rating;
+					res.render('route_details', context);
+				}
+			});
+		}
 	});
 });
 

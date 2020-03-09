@@ -273,32 +273,30 @@ function deleteUser() {
  * refreshes the page. On a failed response, alerts the
  * client.
  ********************************************************************************/
-function addRating() {
-	document.getElementById('addRatingButton').addEventListener('click', function(event){
-		var req = new XMLHttpRequest();
-		var reqData = {
-			rating:document.getElementById('rating').value
+function addRating(page_route_id) {
+	var req = new XMLHttpRequest();
+	var reqData = {
+		rating:document.getElementById('rating').value,
+		route_id:page_route_id
+	}
+	req.open('POST', '/add_rating', true);
+	req.setRequestHeader('Content-Type', 'application/json');
+	req.addEventListener('load', function(){
+		if (req.status < 200 && req.status > 400) {
+			alert("Network error: server could not make contact with database.");
 		}
-		req.open('POST', '/add_rating', true);
-		req.setRequestHeader('Content-Type', 'application/json');
-		req.addEventListener('load', function(){
-			if (req.status < 200 && req.status > 400) {
-				alert("Network error: server could not make contact with database.");
+		else {
+			var retData = JSON.parse(req.responseText);
+			if (retData["resValue"] == 0) {
+				alert("Error: invalid form input. Rating must be between 0 and 5.");
 			}
 			else {
-				var retData = JSON.parse(req.responseText);
-				if (retData["resValue"] == 0) {
-					alert("Error: invalid form inputs. Please correct form inputs and try again." +
-					"State names must be less than 255 characters");
-				}
-				else {
-					window.location.reload();
-				}
+				window.location.reload();
 			}
-		});
-		req.send(JSON.stringify(reqData));
-		event.preventDefault();
+		}
 	});
+	req.send(JSON.stringify(reqData));
+	event.preventDefault();
 };
 
 /********************************************************************************

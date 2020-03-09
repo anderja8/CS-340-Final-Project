@@ -46,15 +46,17 @@
 	<fieldset>
 		<legend>Provide Route Rating</legend>
 		<form>
-			<input type="number" id="rating" name="rating" min=0 max=5 placeholder="Rating" required>
-			<button id="addRatingButton" >Save Rating</button>
+			{{#if user_rating}}
+				<input type="number" id="rating" name="rating" min=0 max=5 value = {{user_rating}} required>
+			{{else}}
+				<input type="number" id="rating" name="rating" min=0 max=5 placeholder="Rating" required>
+			{{/if}}
+			{{#each results}}
+				<button onclick=addRating({{this.route_id}}) id="addRatingButton" >Save Rating</button>
+			{{/each}}
 		</form>	
 {{else}}
 	<p>Please <a href="/login">login</a> to rate this route.
 {{/if}}
 
-<!-- Commenting this out for now until we can get it working, replacing with a simpler form element
-<div class="rating">
-<span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
-</div>
--->
+<script src="/js/scripts.js"></script>
