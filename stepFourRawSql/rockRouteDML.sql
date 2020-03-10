@@ -106,6 +106,20 @@ select rt.route_title, rt.route_id, rt.area_id, rt.overview, rt.grade, rt.type, 
 		) ur on ur.route_id = rt.route_id;
 
 
+/**********************************
+Queries related to Route Rating
+**********************************/
+
+--Insert Rating
+insert into Users_Routes (user_id, route_id, rating) values (?, ?, ?)
+on duplicate key update rating = values (rating);
+
+-- Delete Rating
+delete from Users_Routes where route_id = ? and user_id = ?
+
+-- Updadte Rating
+update Users_Routes set rating = ? where route_id = ? and user_id = ?
+
 /******************************************
 Queries for Login Page
 *******************************************/
@@ -159,11 +173,4 @@ where user_id = :loggedInUser;
 delete from Users
 where user_id = :loggedInUser;
 
---Update Route Rating
-update Users_Routes 
-set rating = :newRating
-where user_id = :loggedInUser;
 
---Delete Route Rating
-delete from Users_Routes
-where user_id = :loggedInUser;
