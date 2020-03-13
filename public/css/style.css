@@ -1,0 +1,35 @@
+body {
+    background-color:cornsilk;
+}
+
+fieldset {
+    border-radius: 25px;
+    padding: 20px;
+  }
+
+button {
+    border-radius: 8px;
+    background-color:steelblue;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+select {
+    width: 100%;
+    padding: 16px 20px;
+    border: none;
+    border-radius: 4px;
+  }
+
+input {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border-radius: 4px;
+}
